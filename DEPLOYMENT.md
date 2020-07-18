@@ -1,8 +1,19 @@
 # SCANOSS Platform Deployment Guide
 
+## Overview
+
+In order to have access the full capabilities of SCANOSS you need to deploy a number of components:
+- The [**LDB**](https://github.com/scanoss/ldb), the database that will contain the Knowledge Base
+- The [**engine**](https://github.com/scanoss/engine), the inventory engine, that provides scanning and searching capabilities over LDB
+- The [**API**](https://github.com/scanoss/API), provides a simple RESTful API for SCANOSS that can be accessed remotely by any clients, such as [scanner.py](https://github.com/scanoss/scanner.py)
+
+These 3 components will give you the capability of scanning and performing Software Composition Analysis on your source code. However, your *Knowledge Base* (LDB) is empty, and you will need to import some software components into it to be able to see some interesting results.
+
+In order to maintain **LDB**, your knowledge base, you will need to install **minr** and implement a [Mining process](MINING.md) to import data into your instance of **LDB**.
+
 ## Requirements
 
-The SCANOSS Platform runs on Linux, but it could certainly be ported to Windows or OSX as it is written entirely in C. This guide is written for Ubuntu Server 20.04 LTS. Package names may vary depending on the Linux distribution used.
+The SCANOSS Platform runs on Linux, but it could certainly be ported to Windows or OSX as it is written entirely in C. This guide is written for Ubuntu Server 20.04 LTS. Package names may vary depending on the Linux distribution used. 
 
 Before installing, make sure all software requirements are in place:
 
@@ -10,9 +21,16 @@ Before installing, make sure all software requirements are in place:
 sudo apt install build-essential unzip libssl-dev zlib1g-dev p7zip-full unrar-free
 ```
 
-# Installation from sources
+And that's it! SCANOSS only requires a number of standard libraries that are pretty much already present in any Linux distribution. 
 
-## Installing the LDB
+From here, the installation process for each component is pretty much the same:
+1. Checkout component project from GitHub
+2. Run `make` and additionally `make install` of the component
+3. Use it!
+
+## Installation from sources
+
+### LDB Installation
 
 LDB is the database engine used for the Knowledge Base. The LDB is required for the engine and minr. The source code can be downloaded and compiled as follows:
 
@@ -37,8 +55,15 @@ Use help for a command list and quit for leaving this session
 ldb> quit
 ```
 
+### Engine Installation
 
-## Installing minr
+See [Installation Section](https://github.com/scanoss/engine#installation) on the engine's `README`.
+
+### API Installation
+
+See [Installation Section](https://github.com/scanoss/API#installation) on the API's `README`.
+
+### Installing minr
 
 Minr is the command-line tool used for downloading and indexing source code. The source code can be downloaded and compiled as follows:
 
@@ -54,7 +79,7 @@ minr -v
 
 The last command should show the installed version of minr.
 
-### Maximum number of open files
+#### Maximum number of open files
 
 Minr requires a high limit on amount of simultaneous open files. This is configured as follows:
 
@@ -64,7 +89,7 @@ echo "ulimit -n 70000" > ~/.bash_profile
 
 Restart your bash session before you try minr
 
-## Installing the Inventory Engine
+### Installing the Inventory Engine
 
 The SCANOSS Inventory Engine a command-line tool used for comparing a file or directory against the Knowledgebase. The source code can be downloaded and compiled as follows:
 
@@ -80,12 +105,12 @@ scanoss -v
 
 The last command should show the installed version of the SCANOSS Inventory Engine.
 
-# Testing minr and the Inventory Engine
+## Testing minr and the Inventory Engine
 
 The following examples show the entire process for downloading an OSS component, importing it into the Knowledge Base and performing a scan against it using the SCANOSS Open Source Inventory Engine:
 
 
-## URL mining
+### URL mining
 
 URL mining is the process of downloading a component, expanding the files and saving component, metadata and original sources for snippet mining.
 
@@ -97,7 +122,7 @@ $
 
 A mined/ directory is created with the downloaded metadata. This includes component and file metadata and source code archives which are kept using the .mz archives, specifically designed for this purpose.
 
-## Snippet mining
+### Snippet mining
 
 Snippet mining is a second step, where snippet information is mined from the .mz archives. This is achieved with the -z parameter.
 
@@ -110,7 +135,7 @@ $
 
 A mined/snippets directory is created with the snippet wfp fingerprints extracted from the .mz files located in mined/sources
 
-## Data importation into the LDB
+### Data importation into the LDB
 
 ```
 $ minr -i mined/
@@ -119,7 +144,7 @@ $
 
 The LDB is now loaded with the component information and a scan can be performed.
 
-## Scanning against the LDB Knowledge Base
+### Scanning against the LDB Knowledge Base
 
 The following example shows an entire component match:
 
