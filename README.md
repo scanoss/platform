@@ -10,7 +10,7 @@ This repository contains a collection of documents for the SCANOSS Platform
 
 # TO DO
 
-Many more documents on their way. Please be patient.
+More documentation is on their way.
 
 # License
 
