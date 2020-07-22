@@ -11,7 +11,11 @@ These 3 components will give you the capability of scanning and performing Softw
 
 In order to maintain **LDB**, your knowledge base, you will need to install **minr** and implement a [Mining process](MINING.md) to import data into your instance of **LDB**.
 
-## Requirements
+## Hardware Requirements
+
+The SCANOSS Platform requires at least a Intel(R) Xeon(R) E-2236 CPU or equivalent with 32Gb of RAM or more. Diskspace requirements for an entire production Knowledgebase is 10Tb. 
+
+## Software Requirements
 
 The SCANOSS Platform runs on Linux, but it could certainly be ported to Windows or OSX as it is written entirely in C. This guide is written for Ubuntu Server 20.04 LTS. Package names may vary depending on the Linux distribution used. 
 
