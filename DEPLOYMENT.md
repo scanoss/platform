@@ -83,16 +83,6 @@ minr -v
 
 The last command should show the installed version of minr.
 
-#### Maximum number of open files
-
-Minr requires a high limit on amount of simultaneous open files. This is configured as follows:
-
-```
-echo "ulimit -n 70000" > ~/.bash_profile
-```
-
-Restart your bash session before you try minr
-
 ### Installing the Inventory Engine
 
 The SCANOSS Inventory Engine a command-line tool used for comparing a file or directory against the Knowledgebase. The source code can be downloaded and compiled as follows:
