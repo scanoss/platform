@@ -47,6 +47,7 @@ make lib
 sudo make install
 sudo mkdir -p /var/lib/ldb/oss/{purl,url,file,wfp}
 sudo chown -R user.user /var/lib/ldb   # Replace user.user with your user and group
+sudo chmod -R 755 /var/lib/ldb
 cd ..
 ldb
 ```
