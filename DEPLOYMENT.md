@@ -22,7 +22,7 @@ The SCANOSS Platform runs on Linux, but it could certainly be ported to Windows 
 Before installing, make sure all software requirements are in place:
 
 ```
-sudo apt install build-essential unzip libssl-dev zlib1g-dev p7zip-full unrar-free
+sudo apt install build-essential libssl-dev zlib1g-dev libsqlite3-dev libz-dev curl gem ruby unzip p7zip-full unrar-free
 ```
 
 And that's it! SCANOSS only requires a number of standard libraries that are pretty much already present in any Linux distribution. 
@@ -43,9 +43,11 @@ wget -O ldb.zip https://github.com/scanoss/ldb/archive/master.zip
 unzip ldb.zip
 cd ldb-master
 make
+make lib
 sudo make install
-sudo mkdir /var/lib/ldb
-sudo chown user.user /var/lib/ldb   # Replace user.user with your user and group
+sudo mkdir -p /var/lib/ldb/oss/{purl,url,file,wfp}
+sudo chown -R user.user /var/lib/ldb   # Replace user.user with your user and group
+sudo chmod -R 755 /var/lib/ldb
 cd ..
 ldb
 ```
@@ -75,7 +77,7 @@ Minr is the command-line tool used for downloading and indexing source code. The
 wget -O minr.zip https://github.com/scanoss/minr/archive/master.zip
 unzip minr.zip
 cd minr-master
-make
+make all
 sudo make install
 cd ..
 minr -v
@@ -109,7 +111,7 @@ The following examples show the entire process for downloading an OSS component,
 URL mining is the process of downloading a component, expanding the files and saving component, metadata and original sources for snippet mining.
 
 ```
-$ minr -d scanoss,webhook,1.0 -u https://github.com/scanoss/webhook/archive/1.0.tar.gz
+$ minr -d scanoss,webhook,1.0,20200320,BSD-3-Clause,pkg:github/scanoss/webhook@1.0 -u https://github.com/scanoss/webhook/archive/1.0.tar.gz
 Downloading https://github.com/scanoss/webhook/archive/1.0.tar.gz
 $
 ```
@@ -147,23 +149,53 @@ $ scanoss 1.0.tar.gz
 {
   "1.0.tar.gz": [
     {
-      "id": "component",
-      "elapsed": "0.001139s",
+      "id": "file",
+      "status": "pending",
       "lines": "all",
       "oss_lines": "all",
       "matched": "100%",
+      "purl": [
+        "pkg:github/scanoss/webhook@1.0"
+      ],
       "vendor": "scanoss",
       "component": "webhook",
       "version": "1.0",
       "latest": "1.0",
-      "url": "https://github.com/scanoss/webhook/archive/1.0.tar.gz",
-      "file": "all",
-      "size": "N/A",
+      "url": "https://github.com/scanoss/webhook@1.0",
+      "release_date": "20200320",
+      "file": "1.0.tar.gz",
+      "url_hash": "611e5c3a58a3c2b78385556368c5230e",
+      "file_hash": "611e5c3a58a3c2b78385556368c5230e",
+      "file_url": "https://github.com/scanoss/webhook/archive/1.0.tar.gz",
       "dependencies": [],
-      "licenses": []
+      "licenses": [
+        {
+          "name": "BSD-3-Clause",
+          "obligations": "https://www.osadl.org/fileadmin/checklists/unreflicenses/BSD-3-Clause.txt",
+          "copyleft": "no",
+          "patent_hints": "no",
+          "source": "component_declared"
+        }
+      ],
+      "copyrights": [
+        {
+          "name": "Copyright (C) 2017-2020; SCANOSS Ltd. All rights reserved.",
+          "source": "license_file"
+        }
+      ],
+      "vulnerabilities": [],
+      "quality": [],
+      "cryptography": [],
+      "server": {
+        "hostname": "localhost",
+        "version": "4.2.4",
+        "flags": "0",
+        "elapsed": "0.041169s"
+      }
     }
   ]
 }
+
 $
 ```
 
@@ -175,22 +207,52 @@ $ scanoss webhook-1.0/scanoss/github.py
   "webhook-1.0/scanoss/github.py": [
     {
       "id": "file",
-      "elapsed": "0.000395s",
+      "status": "pending",
       "lines": "all",
       "oss_lines": "all",
       "matched": "100%",
+      "purl": [
+        "pkg:github/scanoss/webhook@1.0"
+      ],
       "vendor": "scanoss",
       "component": "webhook",
       "version": "1.0",
       "latest": "1.0",
-      "url": "https://github.com/scanoss/webhook/archive/1.0.tar.gz",
+      "url": "https://github.com/scanoss/webhook@1.0",
+      "release_date": "20200320",
       "file": "webhook-1.0/scanoss/github.py",
-      "size": "6624",
+      "url_hash": "611e5c3a58a3c2b78385556368c5230e",
+      "file_hash": "8c2fa3f24a09137f9bb3860fa21c677e",
+      "file_url": "https://osskb.org/api/file_contents/8c2fa3f24a09137f9bb3860fa21c677e",
       "dependencies": [],
-      "licenses": []
+      "licenses": [
+        {
+          "name": "BSD-3-Clause",
+          "obligations": "https://www.osadl.org/fileadmin/checklists/unreflicenses/BSD-3-Clause.txt",
+          "copyleft": "no",
+          "patent_hints": "no",
+          "source": "component_declared"
+        }
+      ],
+      "copyrights": [
+        {
+          "name": "Copyright (C) 2017-2020; SCANOSS Ltd. All rights reserved.",
+          "source": "license_file"
+        }
+      ],
+      "vulnerabilities": [],
+      "quality": [],
+      "cryptography": [],
+      "server": {
+        "hostname": "localhost",
+        "version": "4.2.4",
+        "flags": "0",
+        "elapsed": "0.129558s"
+      }
     }
   ]
 }
+
 $
 ```
 
@@ -203,22 +265,52 @@ $ scanoss webhook-1.0/scanoss/github.py
   "webhook-1.0/scanoss/github.py": [
     {
       "id": "snippet",
-      "elapsed": "0.001812s",
+      "status": "pending",
       "lines": "1-192",
       "oss_lines": "3-194",
       "matched": "99%",
+      "purl": [
+        "pkg:github/scanoss/webhook@1.0"
+      ],
       "vendor": "scanoss",
       "component": "webhook",
       "version": "1.0",
       "latest": "1.0",
-      "url": "https://github.com/scanoss/webhook/archive/1.0.tar.gz",
+      "url": "https://github.com/scanoss/webhook@1.0",
+      "release_date": "20200320",
       "file": "webhook-1.0/scanoss/github.py",
-      "size": "6624",
+      "url_hash": "611e5c3a58a3c2b78385556368c5230e",
+      "file_hash": "8c2fa3f24a09137f9bb3860fa21c677e",
+      "file_url": "https://osskb.org/api/file_contents/8c2fa3f24a09137f9bb3860fa21c677e",
       "dependencies": [],
-      "licenses": []
+      "licenses": [
+        {
+          "name": "BSD-3-Clause",
+          "obligations": "https://www.osadl.org/fileadmin/checklists/unreflicenses/BSD-3-Clause.txt",
+          "copyleft": "no",
+          "patent_hints": "no",
+          "source": "component_declared"
+        }
+      ],
+      "copyrights": [
+        {
+          "name": "Copyright (C) 2017-2020; SCANOSS Ltd. All rights reserved.",
+          "source": "license_file"
+        }
+      ],
+      "vulnerabilities": [],
+      "quality": [],
+      "cryptography": [],
+      "server": {
+        "hostname": "localhost",
+        "version": "4.2.4",
+        "flags": "0",
+        "elapsed": "0.067090s"
+      }
     }
   ]
 }
+
 $
 ```
 
