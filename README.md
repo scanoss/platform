@@ -7,6 +7,9 @@ This repository contains a collection of documents for the SCANOSS Platform
 * [Winnowing algorithm](WINNOWING.md)
 * [Mining Process](MINING.md)
 * [MZ Archive Specification](MZ.md)
+* [Hardware Requirements](HARDWARE-REQUIREMENTS.md)
+* [Disk Partitioning](DISK-PARTITIONING.md)
+* [Load Balancer](LOAD-BALANCER.md)
 
 # TO DO
 
